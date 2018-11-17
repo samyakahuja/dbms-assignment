@@ -2,8 +2,7 @@ from itertools import combinations
 from helpers import every
 from helpers import some
 class FunctionalDependencySet:
-    __items__ = set()
-
+    
     def __init__(self, iterable = []):
         self.__items__ = set( (lhs,rhs) for lhs, rhs in map(lambda x: x.split('->'), iterable) )
 
@@ -103,7 +102,7 @@ def isThirdNF(relation):
     if(not isSecondNF(relation)):
         return False
 
-    return not every(relation.fdSet, lambda fdItem: set(fdItem[0]).issubset(fdItem[1]) or relation.validKey(fdItem[1]) or set(fdItem[0]).issubset(primes) )
+    return every(relation.fdSet, lambda fdItem: set(fdItem[1]).issubset(fdItem[0]) or relation.validKey(fdItem[0]) or set(fdItem[1]).issubset(primes) )
 
 def isBCNF(relation):
     if(not isThirdNF(relation)):
