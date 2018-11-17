@@ -58,9 +58,11 @@ class Relation:
     def candidateKeys(self):
         #generating all possible combinations of attributes
         keys = []
-        for i in range(1, len(self.fdSet)):
-            possibilities = combinations(self.__attributes__, i)
-            keys += [item for item in possibilities if self.validKey(item) and  every(keys, lambda key: not set(key).issubset(item))]
+        for i in range(1, len(self.__attributes__)+1):
+            
+            possibilities = [ item for item in combinations(self.__attributes__, i) if not len(keys) or every(keys, lambda key: not set(key).issubset(item))]
+
+            keys += [item for item in possibilities if self.validKey(item) ]
 
         return keys
 
