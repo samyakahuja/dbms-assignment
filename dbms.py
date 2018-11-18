@@ -149,7 +149,7 @@ def minimalCover(attributes, fdString):
         lhs_closure = fd_set.closureSet(lhs)
         for ele in temp_lhs:
             if lhs_closure == temp_fds.closureSet(ele):
-                lhs = e
+                lhs = ele
                 break
         temp_fds.add(lhs,rhs)
     fd_set = temp_fds.duplicate()
