@@ -81,7 +81,10 @@ class Relation:
         return "R(" + ", ".join(self.__attributes__) + "):\n" + self.fdSet.toString()
 
 def cover(fd1, fd2):
-    return every( lambda item: fd1.closureSet(item).issubset(fd2.closureSet(item)), fd1.leftSideSet() )
+    return every(
+        fd1.leftSideSet(),
+        lambda item: fd1.closureSet(item).issubset(fd2.closureSet(item))
+    )
 
 def equivalence(fd1,fd2):
     #fd2 covers fd1 and fd1 covers fd2
@@ -93,14 +96,20 @@ def isPartialDependency(fdItem, candidates, nonPrimes):
     if( not set(rhs).intersection(nonPrimes) ):
         return False
 
-    return some( candidates, lambda key: not(set(key) == set(lhs)) and set(lhs).intersection(key) )
+    return some(
+        candidates,
+        lambda key: not(set(key) == set(lhs)) and set(lhs).intersection(key)
+    )
 
 def hasPartialDependency(relation):
     candidates = relation.candidateKeys()
     primes = set( attr for key in candidates for attr in key)
     nonPrimes = relation.attributes().difference(primes)
 
-    return some(relation.fdSet, lambda fdItem: isPartialDependency(fdItem, candidates, nonPrimes) )
+    return some(
+        relation.fdSet, 
+        lambda fdItem: isPartialDependency(fdItem, candidates, nonPrimes)
+    )
 
 def isFirstNF(relation):
     return True
@@ -114,13 +123,19 @@ def isThirdNF(relation):
     if(not isSecondNF(relation)):
         return False
 
-    return every(relation.fdSet, lambda fdItem: set(fdItem[1]).issubset(fdItem[0]) or relation.validKey(fdItem[0]) or set(fdItem[1]).issubset(primes) )
+    return every(
+        relation.fdSet,
+        lambda fdItem: set(fdItem[1]).issubset(fdItem[0]) or relation.validKey(fdItem[0]) or set(fdItem[1]).issubset(primes)
+    )
 
 def isBCNF(relation):
     if(not isThirdNF(relation)):
         return False
 
-    return every(relation.fdSet.leftSideSet(), lambda lhs: relation.validKey(lhs) )
+    return every(
+        relation.fdSet.leftSideSet(),
+        lambda lhs: relation.validKey(lhs)
+    )
 
 def minimalCover(attributes, fdString):
     fd_set = FunctionalDependencySet([ fd for fd in fdString.split(',')])
